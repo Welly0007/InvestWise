@@ -5,7 +5,6 @@ public abstract class User implements Serializable {
     protected String email;
     protected String userName;
     protected String password;
-    public abstract void showUser();
     public User(String name, String email, String userName, String password) {
         this.name = name;
         this.email = email;
@@ -22,4 +21,5 @@ public abstract class User implements Serializable {
     public String getUserName(){
         return this.userName;
     }
+    public abstract void showUser();
 }
