@@ -5,7 +5,6 @@ import java.util.List;
 public abstract class Database<T> implements Serializable {
     private static final long serialVersionUID = 1L;
     protected String fileName;
-    protected long numItems;
 
     public Database(String fileName) {
         this.fileName = fileName;

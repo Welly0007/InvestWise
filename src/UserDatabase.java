@@ -1,7 +1,7 @@
 import java.util.List;
 
 public class UserDatabase extends Database<User> {
-    private static final long serialVersionUID = 2L;
+    private static final long serialVersionUID = 3L;
     private List<User> users;
 
     public UserDatabase() {
@@ -15,7 +15,6 @@ public class UserDatabase extends Database<User> {
             if (isValidUser(newUser)) {
                 users.add(newUser);
                 saveToFile(users);
-                numItems++;
                 return true;
             } else {
                 System.out.println("Invalid user data.");
@@ -31,13 +30,13 @@ public class UserDatabase extends Database<User> {
         if (users.contains(user)) {
             users.remove(user);
             saveToFile(users);
-            numItems--;
             return true;
         } else {
             System.out.println("User not found in the database.");
             return false;
         }
     }
+
     @Override
     public boolean editData(User oldData, User newData) {
         deleteData(oldData);

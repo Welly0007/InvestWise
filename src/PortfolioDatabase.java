@@ -13,7 +13,6 @@ public class PortfolioDatabase extends Database<Portfolio>{
         if (!ports.contains(newPort)) {
             this.ports.add(newPort);
             saveToFile(ports);
-            numItems++;
             return true;
         } else {
             System.out.println("User already exists in the database.");
@@ -26,7 +25,6 @@ public class PortfolioDatabase extends Database<Portfolio>{
         if (ports.contains(port)) {
             ports.remove(port);
             saveToFile(ports);
-            numItems--;
             return true;
         } else {
             System.out.println("Portfolio not found in the database.");
