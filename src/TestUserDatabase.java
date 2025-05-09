@@ -1,45 +1,37 @@
 public class TestUserDatabase {
     public static void main(String[] args) {
-        UserDatabase userDB = new UserDatabase();
+        AuthService auth = new AuthService();
+        auth.clear();
 
         // Case 1: Valid user (should succeed)
         System.out.println("Test 1: Valid user");
-        User validUser = new NormalUser("Ahmed", "ahmed@example.com", "ahmed123", "Password1*!");
-        boolean result1 = userDB.addData(validUser);
+        boolean result1 = auth.signUp("Ahmed", "ahmed@example.com", "ahmed123", "Password1*!", "Password1*!");
         System.out.println("Result: " + result1);
         System.out.println();
 
         // Case 2: Duplicate username (should fail)
         System.out.println("Test 2: Duplicate username");
-        User duplicateUser = new NormalUser("Alice B", "aliceb@example.com", "alice123", "Another1!");
-        boolean result2 = userDB.addData(duplicateUser);
+        boolean result2 = auth.signUp("Alice B", "aliceb@example.com", "ahmed123", "Another1!", "Another1!"); // same username
         System.out.println("Result: " + result2);
         System.out.println();
 
-        // Case 3: Invalid email format
+        // Case 3: Invalid email format (should fail)
         System.out.println("Test 3: Invalid email");
-        User invalidEmailUser = new NormalUser("Bob", "bob[at]email", "bobuser", "Secure1!");
-        boolean result3 = userDB.addData(invalidEmailUser);
+        boolean result3 = auth.signUp("Bob", "bob[at]email", "bobuser", "Secure1!", "Secure1!");
         System.out.println("Result: " + result3);
         System.out.println();
 
-        // Case 4: Weak password (no uppercase or special char)
+        // Case 4: Weak password (should fail)
         System.out.println("Test 4: Weak password");
-        User weakPasswordUser = new NormalUser("Charlie", "charlie@email.com", "charlieuser", "password");
-        boolean result4 = userDB.addData(weakPasswordUser);
+        boolean result4 = auth.signUp("Charlie", "charlie@email.com", "charlieuser", "password", "password");
         System.out.println("Result: " + result4);
         System.out.println();
 
-        // Case 5: Very long name (over 100 chars)
+        // Case 5: Very long name (should fail)
         System.out.println("Test 5: Very long name");
         String longName = "A".repeat(101);
-        User longNameUser = new NormalUser(longName, "long@example.com", "longuser", "Valid1@");
-        boolean result5 = userDB.addData(longNameUser);
+        boolean result5 = auth.signUp(longName, "long@example.com", "longuser", "Valid1@", "Valid1@");
         System.out.println("Result: " + result5);
         System.out.println();
-
-        // View all users
-        System.out.println("Current users in DB:");
-        userDB.displayUsers();
     }
 }

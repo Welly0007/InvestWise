@@ -7,14 +7,18 @@ public class AuthService implements Serializable {
     public AuthService() {
         this.userDB = new UserDatabase();
     }
-
+    
     public SignupResult signUp(String name, String email, String username, String password) {
         try {
             Investor newUser = new Investor(name, email, username, password);
+            if (!isValidUser(newUser)) {
+                return SignupResult.FAILED;
+            }
             if (userDB.addData(newUser)) {
                 return SignupResult.SUCCESS;
+            } else {
+                return SignupResult.DUPLICATE_USERNAME;
             }
-            return SignupResult.FAILED;
         } catch (IllegalArgumentException e) {
             return SignupResult.fromException(e);
         }
@@ -74,4 +78,59 @@ public class AuthService implements Serializable {
             return user;
         }
     }
+    public boolean userExists(String userName) {
+        return userDB.findUser(userName) != null;
+    }
+    private boolean isValidName(String name) {
+        if (name == null || name.isEmpty() || name.length() >= 100) {
+            System.out.println("Invalid name: must be under 100 characters and not empty.");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isValidEmail(String email) {
+        if (email == null || email.length() >= 100 || 
+            !email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$")) {
+            System.out.println("Invalid email: must be a valid format and under 100 characters.");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isValidUsername(String username) {
+        if (username == null || username.length() >= 50) {
+            System.out.println("Invalid username: must be under 50 characters.");
+            return false;
+        }
+        if (userDB.findUser(username) != null) {
+            System.out.println("Username already exists.");
+            return false;
+        }
+        return true;
+    }
+    
+    private boolean isValidPassword(String password) {
+        if (password == null || password.length() >= 100) {
+            System.out.println("Password must be under 100 characters.");
+            return false;
+        }
+        if (!password.matches("^(?=.*[A-Z])(?=.*[0-9!@#$%^&*]).+$")) {
+            System.out.println("Password must contain at least one uppercase letter and one number or special character.");
+            return false;
+        }
+        return true;
+    }
+
+    public boolean isValidUser(User user) {
+        return isValidName(user.name) &&
+               isValidEmail(user.email) &&
+               isValidUsername(user.userName) &&
+               isValidPassword(user.password ); 
+    }
+    public void clear() {
+        userDB.clear(); 
+    }
+
+    
 }
