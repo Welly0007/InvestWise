@@ -8,46 +8,91 @@ public class AuthService implements Serializable {
         this.userDB = new UserDatabase();
     }
     
-    public SignupResult signUp(String name, String email, String username, String password) {
-        try {
-            Investor newUser = new Investor(name, email, username, password);
-            if (!isValidUser(newUser)) {
-                return SignupResult.FAILED;
-            }
-            if (userDB.addData(newUser)) {
-                return SignupResult.SUCCESS;
-            } else {
-                return SignupResult.DUPLICATE_USERNAME;
-            }
-        } catch (IllegalArgumentException e) {
-            return SignupResult.fromException(e);
-        }
+ 
+    public SignupResult signUp(String name, String email, String username, 
+                          String password, String confirmPassword) {
+    
+    if (!password.equals(confirmPassword)) {
+        return SignupResult.PASSWORD_MISMATCH;
     }
-    public boolean signUp(String name, String email, String username, String password, String confirmPassword) {
-        if (!password.equals(confirmPassword)) {
-            System.out.println("Passwords do not match.");
-            return false;
-        }
+
+    try {
         Investor newUser = new Investor(name, email, username, password);
-        return userDB.addData(newUser);
-    }
-
-    public User login(String username, String password) {
-        User user = userDB.findUser(username);
-        if (user != null && user.checkPassword(password)) {
-            return user;
+        
+       
+        if (!isValidUser(newUser)) {
+            return SignupResult.FAILED; 
         }
-        System.out.println("Invalid username or password.");
-        return null;
+        
+        if (userDB.addData(newUser)) {
+            return SignupResult.SUCCESS;
+        } else {
+            return SignupResult.DUPLICATE_USERNAME;
+        }
+    } catch (IllegalArgumentException e) {
+        return SignupResult.fromException(e);
     }
-
+}
+    public LoginResult login(String username, String password) {
+        // 1. Input validation
+        if (username == null || username.trim().isEmpty()) {
+            System.out.println("Username cannot be empty");
+            return LoginResult.INVALID_CREDENTIALS;
+        }
+        
+        if (password == null || password.trim().isEmpty()) {
+            System.out.println("Password cannot be empty");
+            return LoginResult.INVALID_CREDENTIALS;
+        }
+        
+        // 2. Format validation (consistent with signup rules)
+        if (!isValidUsernameFormat(username)) {
+            System.out.println("Invalid username format");
+            return LoginResult.INVALID_CREDENTIALS;
+        }
+        
+        // 3. Find user
+        User user = userDB.findUser(username);
+        if (user == null) {
+            System.out.println("User not found");
+            return LoginResult.INVALID_CREDENTIALS;
+        }
+        
+        // 4. Password check (using your existing checkPassword method)
+        if (!user.checkPassword(password)) {
+            System.out.println("Incorrect password");
+            return LoginResult.INVALID_CREDENTIALS;
+        }
+        
+        // 5. Return success
+        return LoginResult.success(user);
+    }
+    
+    // Helper method to validate username format (without duplicate check)
+    private boolean isValidUsernameFormat(String username) {
+        return username != null && 
+               username.length() < 50 && 
+               !username.trim().isEmpty();
+    }
+    
     public enum SignupResult {
-        SUCCESS,
-        DUPLICATE_USERNAME,
-        INVALID_NAME,
-        INVALID_EMAIL,
-        INVALID_PASSWORD,
-        FAILED;
+            SUCCESS("Registration successful!"),
+            DUPLICATE_USERNAME("Username already exists"),
+            INVALID_NAME("Invalid name format"),
+            INVALID_EMAIL("Invalid email format"),
+            INVALID_PASSWORD("Password must contain uppercase, number/special char"),
+            PASSWORD_MISMATCH("Passwords do not match"),
+            FAILED("Registration failed");
+        
+            private final String message;
+        
+            SignupResult(String message) {
+                this.message = message;
+            }
+        
+            public String getMessage() {
+                return message;
+            }
 
         public static SignupResult fromException(IllegalArgumentException e) {
             String message = e.getMessage();
@@ -115,7 +160,7 @@ public class AuthService implements Serializable {
             System.out.println("Password must be under 100 characters.");
             return false;
         }
-        if (!password.matches("^(?=.*[A-Z])(?=.*[0-9!@#$%^&*]).+$")) {
+        if (!password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,100}$")) {
             System.out.println("Password must contain at least one uppercase letter and one number or special character.");
             return false;
         }
