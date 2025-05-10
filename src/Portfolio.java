@@ -1,21 +1,18 @@
 import java.util.List;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Scanner;
 
 public class Portfolio implements Serializable {
     private Investor owner;
     private String name;
     private List<Asset> assets;
-    private PerformancCalculator tracker;
-    private RiskAllocation riskAssessor;
     private PortfolioDatabase portfolioDatabase;
 
     public Portfolio(Investor createdBy, PortfolioDatabase portfolioDatabase, String name) {
         this.owner = createdBy;
         this.portfolioDatabase = portfolioDatabase;
         this.name = name;
-        this.assets = new ArrayList<>(); 
+        this.assets = new ArrayList<>();
         portfolioDatabase.addData(this);
     }
 
