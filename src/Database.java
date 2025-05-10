@@ -11,6 +11,11 @@ public abstract class Database<T> implements Serializable {
     }
 
     protected List<T> loadFromFile() {
+        File file = new File(fileName);
+        if (!file.exists()) {
+            System.out.println("Database file not found. Creating a new one...");
+            saveToFile(new ArrayList<>()); // Create an empty database file
+        }
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
             return (List<T>) in.readObject();
         } catch (Exception e) {

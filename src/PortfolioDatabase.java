@@ -11,11 +11,10 @@ public class PortfolioDatabase extends Database<Portfolio>{
     @Override
     public boolean addData(Portfolio newPort) {
         if (!ports.contains(newPort)) {
-            this.ports.add(newPort);
-            saveToFile(ports);
+            ports.add(newPort);
+            saveToFile(ports); // Save the updated list to the file
             return true;
         } else {
-            System.out.println("User already exists in the database.");
             return false;
         }
     }
@@ -27,7 +26,6 @@ public class PortfolioDatabase extends Database<Portfolio>{
             saveToFile(ports);
             return true;
         } else {
-            System.out.println("Portfolio not found in the database.");
             return false;
         }
     }
