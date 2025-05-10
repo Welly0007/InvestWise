@@ -1,7 +1,22 @@
 import java.util.Date;
 import java.util.Scanner;
 // Asset Factory class used for creating asset
+/**
+ * A factory class for creating different types of assets.
+ * Implements the Factory pattern to create instances of various asset subclasses
+ * based on user input.
+ */
 public class AssetFactory {
+    /**
+     * Creates and returns a new asset based on user input.
+     * Guides the user through the asset creation process by prompting for:
+     * - Asset type (stocks, crypto, real estate, gold)
+     * - Common asset properties (name, quantity, purchase price, Zakat eligibility)
+     * - Type-specific properties
+     * 
+     * @return A newly created Asset object, or null if creation fails
+     * @throws InterruptedException if the thread sleep is interrupted
+     */
     public static Asset createAsset() {
         Scanner scanner = new Scanner(System.in);
         System.out.println("Enter asset type (stocks, crypto, real estate, gold): ");

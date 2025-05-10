@@ -1,4 +1,14 @@
+/**
+ * Test class for verifying user authentication functionality.
+ * Contains test cases for both signup and login operations,
+ * covering various success and failure scenarios.
+ */
 public class TestUserDatabase {
+    /**
+     * Main method that executes all authentication test cases.
+     * 
+     * @param args Command line arguments (not used)
+     */
     public static void main(String[] args) {
         AuthService auth = new AuthService();
         auth.clear();
@@ -41,7 +51,7 @@ public class TestUserDatabase {
         System.out.println("Result: " + result6 + " - " + result6.getMessage());
         System.out.println();
 
-            // ========== LOGIN TESTS ==========
+        // ========== LOGIN TESTS ==========
         System.out.println("\n=== LOGIN TEST CASES ===");
 
         // Case 7: Successful login with correct credentials

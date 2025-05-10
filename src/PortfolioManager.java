@@ -1,12 +1,23 @@
 import java.util.List;
 import java.util.Scanner;
 
+/**
+ * Manages portfolio operations for an investor, including creating, viewing,
+ * editing, and removing portfolios and their assets.
+ * Provides a user-friendly console interface for portfolio management.
+ */
 public class PortfolioManager {
     private Investor investor;
     private PortfolioDatabase portfolioDatabase;
     private List<Portfolio> portfolios;
     private Scanner scanner;
 
+    /**
+     * Constructs a PortfolioManager for the specified investor.
+     * Initializes the portfolio database and loads the investor's portfolios.
+     *
+     * @param investor The investor whose portfolios will be managed
+     */
     public PortfolioManager(Investor investor) {
         this.investor = investor;
         this.portfolioDatabase = new PortfolioDatabase();
@@ -14,6 +25,10 @@ public class PortfolioManager {
         this.scanner = new Scanner(System.in);
     }
 
+    /**
+     * Starts the portfolio management interface.
+     * Displays the main menu and processes user input until exit is requested.
+     */
     public void start() {
         boolean exit = false;
         while (!exit) {
@@ -57,6 +72,10 @@ public class PortfolioManager {
         }
     }
 
+    /**
+     * Adds a new portfolio with the specified name for the investor.
+     * Updates the portfolio list after creation.
+     */
     private void addPortfolio() {
         System.out.print("Enter Portfolio Name: ");
         String portName = scanner.nextLine();
@@ -65,6 +84,10 @@ public class PortfolioManager {
         portfolios = portfolioDatabase.getUserPortfolios(investor);
     }
 
+    /**
+     * Displays all portfolios belonging to the investor.
+     * Shows a message if no portfolios exist.
+     */
     private void viewPortfolios() {
         if (portfolios.isEmpty()) {
             System.out.println("No portfolios found.");
@@ -76,6 +99,10 @@ public class PortfolioManager {
         }
     }
 
+    /**
+     * Removes a selected portfolio after confirmation.
+     * Displays the portfolio list and prompts for selection.
+     */
     private void removePortfolio() {
         if (portfolios.isEmpty()) {
             System.out.println("No portfolios to remove.");
@@ -100,6 +127,10 @@ public class PortfolioManager {
         }
     }
 
+    /**
+     * Manages a selected portfolio.
+     * Displays the portfolio list and prompts for selection.
+     */
     private void managePortfolio() {
         if (portfolios.isEmpty()) {
             System.out.println("No portfolios available to manage.");
@@ -116,6 +147,12 @@ public class PortfolioManager {
         manageSinglePortfolio(selectedPortfolio);
     }
 
+    /**
+     * Provides asset management interface for a specific portfolio.
+     * Displays asset management menu and processes user input.
+     *
+     * @param portfolio The portfolio to manage
+     */
     private void manageSinglePortfolio(Portfolio portfolio) {
         boolean exit = false;
         while (!exit) {
@@ -176,6 +213,12 @@ public class PortfolioManager {
         }
     }
 
+    /**
+     * Validates and retrieves integer input from the user.
+     * Continues prompting until valid integer input is received.
+     *
+     * @return The validated integer input
+     */
     private int getValidIntInput() {
         while (!scanner.hasNextInt()) {
             System.out.println("Invalid input. Please enter a valid number.");
