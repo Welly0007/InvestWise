@@ -221,22 +221,45 @@ public class AuthService implements Serializable {
         }
         return true;
     }
-     /**
-     * Validates a password according to system complexity requirements.
+        /**
+     * Validates a password according to system security requirements.
+     * <p>
+     * The password must meet the following criteria:
+     * <ul>
+     *   <li>Must not be null</li>
+     *   <li>Must be between 8 and 100 characters in length</li>
+     *   <li>Must contain at least one uppercase letter (A-Z)</li>
+     *   <li>Must contain at least one digit (0-9) or special character</li>
+     * </ul>
+     * </p>
      * 
-     * @param password the password to validate
-     * @return true if the password is valid, false otherwise
+     * @param password the password string to validate
+     * @return {@code true} if the password meets all requirements, {@code false} otherwise
+     * 
+     * @examples
+     * // Returns true
+     * isValidPassword("ValidPass123!");
+     * isValidPassword("Another$Password9");
+     * 
+     * // Returns false
+     * isValidPassword("weak");              // Too short
+     * isValidPassword("nouppercase123");    // Missing uppercase
+     * isValidPassword("ALLUPPERCASE");      // Missing digit/special char
+     * isValidPassword(null);                // Null input
      */
     private boolean isValidPassword(String password) {
-        if (password == null || password.length() >= 100) {
-            System.out.println("Password must be under 100 characters.");
+        if (password == null || password.length() < 8 || password.length() > 100) {
             return false;
         }
-        if (!password.matches("^(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#$%^&*]).{8,100}$")) {
-            System.out.println("Password must contain at least one uppercase letter and one number or special character.");
-            return false;
-        }
-        return true;
+        
+        // Regex explanation:
+        // ^           - start of string
+        // (?=.*[A-Z]) - at least one uppercase letter
+        // (?=.*[\d\W]) - at least one digit or special character
+        // .+          - one or more of any characters
+        // $           - end of string
+        String pattern = "^(?=.*[A-Z])(?=.*[\\d\\W]).+$";
+        return password.matches(pattern);
     }
     /**
      * Validates all user attributes according to system rules.
