@@ -10,6 +10,7 @@ public class PortfolioManager {
     private Investor investor;
     private PortfolioDatabase portfolioDatabase;
     private List<Portfolio> portfolios;
+    private ZakatEstimator zakatEstimator;
     private Scanner scanner;
 
     /**
@@ -22,6 +23,7 @@ public class PortfolioManager {
         this.investor = investor;
         this.portfolioDatabase = new PortfolioDatabase();
         this.portfolios = portfolioDatabase.getUserPortfolios(investor);
+        this.zakatEstimator = new ZakatEstimator();
         this.scanner = new Scanner(System.in);
     }
 
@@ -164,9 +166,10 @@ public class PortfolioManager {
                 System.out.println("2. View Assets");
                 System.out.println("3. Edit Asset");
                 System.out.println("4. Remove Asset");
-                System.out.println("5. Return to Main Menu");
+                System.out.println("5. Calculate Zakat");
+                System.out.println("6. Return to Main Menu");
                 System.out.println("========================================");
-                System.out.print("Choose an option (1-5): ");
+                System.out.print("Choose an option (1-6): ");
                 int choice = getValidIntInput();
 
                 switch (choice) {
@@ -201,6 +204,9 @@ public class PortfolioManager {
                         }
                         break;
                     case 5:
+                        zakatEstimator.displayZakatDetails(portfolio);
+                        break;
+                    case 6:
                         exit = true;
                         break;
                     default:
