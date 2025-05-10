@@ -30,13 +30,12 @@ public abstract class Asset implements Serializable {
         System.out.println("Is Zakat applicable? (true/false): ");
         this.setZakatApplicable(scanner.nextBoolean());
         scanner.nextLine();
-
         // Call the hook method for derived class specific edit
         editSpecificDetails(scanner);
     }
 
     // hook method for derived classes to edit specific asset details
-    protected void editSpecificDetails(Scanner scanner) {}
+    protected abstract void editSpecificDetails(Scanner scanner);
 
     @Override
     public String toString() {
