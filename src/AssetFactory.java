@@ -48,7 +48,7 @@ public class AssetFactory {
                 System.out.println("Enter Karat: ");
                 String karat = scanner.nextLine();
                 System.out.println("Enter WeightInGrams: ");
-                String weightInGrams = scanner.nextLine();
+                float weightInGrams = scanner.nextFloat();
                 return new Gold(assetName, assetQuantity, purchaseDate, purchasePrice, zakatApplicable, karat, weightInGrams);
             default:
                 System.out.println("Invalid asset type: " + assetType + ". Asset creation failed.");

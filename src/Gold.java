@@ -3,9 +3,9 @@ import java.util.Scanner;
 
 public class Gold extends Asset {
     String karat;
-    String weightInGrams;
+    float weightInGrams;
 
-    public Gold(String name, int quantity, Date purchaseDate, float purchasePrice, Boolean zakatApplicable, String karat, String weightInGrams) {
+    public Gold(String name, int quantity, Date purchaseDate, float purchasePrice, Boolean zakatApplicable, String karat, Float weightInGrams) {
         super(name, quantity, purchaseDate, purchasePrice, zakatApplicable);
         this.karat = karat;
         this.weightInGrams = weightInGrams;
@@ -19,11 +19,11 @@ public class Gold extends Asset {
         this.karat = karat;
     }
 
-    public String getWeightInGrams() {
+    public float getWeightInGrams() {
         return weightInGrams;
     }
 
-    public void setWeightInGrams(String weightInGrams) {
+    public void setWeightInGrams(float weightInGrams) {
         this.weightInGrams = weightInGrams;
     }
     @Override
@@ -31,7 +31,7 @@ public class Gold extends Asset {
         System.out.println("Enter new Karat: ");
         this.setKarat(scanner.nextLine());
         System.out.println("Enter new Weight in Grams: ");
-        this.setWeightInGrams(scanner.nextLine());
+        this.setWeightInGrams(scanner.nextFloat());
     }
     @Override
     public String toString() {
