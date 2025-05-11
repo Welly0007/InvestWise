@@ -11,6 +11,8 @@ public class PortfolioManager {
     private PortfolioDatabase portfolioDatabase;
     private List<Portfolio> portfolios;
     private ZakatEstimator zakatEstimator;
+    private ZakatReport zakatReport;
+    private PortfolioReport portfolioReport;
     private Scanner scanner;
 
     /**
@@ -24,6 +26,8 @@ public class PortfolioManager {
         this.portfolioDatabase = new PortfolioDatabase();
         this.portfolios = portfolioDatabase.getUserPortfolios(investor);
         this.zakatEstimator = new ZakatEstimator();
+        this.zakatReport = null;
+        this.portfolioReport = new PortfolioReport(portfolios, investor);
         this.scanner = new Scanner(System.in);
     }
 
@@ -42,7 +46,8 @@ public class PortfolioManager {
                 System.out.println("2. View Portfolios");
                 System.out.println("3. Remove Portfolio");
                 System.out.println("4. Manage Portfolio");
-                System.out.println("5. Exit");
+                System.out.println("5. Generate Portfolio Report");
+                System.out.println("6. Exit");
                 System.out.println("========================================");
                 System.out.print("Choose an option (1-5): ");
                 int choice = getValidIntInput();
@@ -61,6 +66,9 @@ public class PortfolioManager {
                         managePortfolio();
                         break;
                     case 5:
+                        generatePortfolioReport();
+                        break;
+                    case 6:
                         exit = true;
                         System.out.println("\n Exiting Portfolio Management...");
                         break;
@@ -127,6 +135,20 @@ public class PortfolioManager {
         } else {
             System.out.println("Portfolio removal canceled.");
         }
+    }
+
+    /**
+     * Generates a comprehensive report of all portfolios and their assets.
+     */
+    private void generatePortfolioReport() {
+        if (portfolios.isEmpty()) {
+            System.out.println("No portfolios available for report generation.");
+            return;
+        }
+
+        System.out.println("\nGenerating portfolio report...");
+        portfolioReport = new PortfolioReport(portfolios, investor);
+        portfolioReport.generateReport();
     }
 
     /**
@@ -205,6 +227,12 @@ public class PortfolioManager {
                         break;
                     case 5:
                         zakatEstimator.displayZakatDetails(portfolio);
+                        System.out.print("Would you like to generate a Zakat report? (yes/no): ");
+                        String generateReport = scanner.nextLine().trim().toLowerCase();
+                        if (generateReport.equals("yes")) {
+                            zakatReport = new ZakatReport(portfolio);
+                            zakatReport.generateReport();
+                        }
                         break;
                     case 6:
                         exit = true;
