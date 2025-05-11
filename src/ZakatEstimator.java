@@ -1,7 +1,20 @@
+/**
+ * A utility class for calculating and displaying Zakat obligations
+ * on investment portfolios according to Islamic financial principles.
+ * Zakat is calculated at a fixed rate of 2.5% on applicable assets.
+ */
 public class ZakatEstimator {
+    /** The fixed Zakat rate (2.5%) to be applied to applicable assets */
     private static final double ZAKAT_RATE = 0.025; // 2.5%
 
-    // calculate zakat for assets excluding non zakatable assets
+    /**
+     * Calculates the Zakat obligation for a single asset.
+     * Returns zero if the asset is not Zakat-applicable.
+     *
+     * @param asset the asset to calculate Zakat for
+     * @return the Zakat amount for the asset (0 if not applicable)
+     * @throws IllegalArgumentException if asset is null
+     */
     public double calculateAssetZakat(Asset asset) {
         if (!asset.isZakatApplicable()) {
             return 0.0;
@@ -11,7 +24,14 @@ public class ZakatEstimator {
         return assetValue * ZAKAT_RATE;
     }
 
-    //calculate zakat for the entire portfolio
+    /**
+     * Calculates the total Zakat obligation for an entire portfolio
+     * by summing Zakat for all applicable assets in the portfolio.
+     *
+     * @param portfolio the portfolio to calculate Zakat for
+     * @return the total Zakat amount for the portfolio
+     * @throws IllegalArgumentException if portfolio is null
+     */
     public double calculatePortfolioZakat(Portfolio portfolio) {
         double totalZakat = 0.0;
         for (Asset asset : portfolio.getAssets()) {
@@ -20,7 +40,14 @@ public class ZakatEstimator {
         return totalZakat;
     }
 
-    //display zakat details for each asset in the portfolio in terminal
+    /**
+     * Displays detailed Zakat calculation information for a portfolio
+     * including individual asset Zakat amounts and the total obligation.
+     * Only shows assets that are Zakat-applicable.
+     *
+     * @param portfolio the portfolio to display Zakat details for
+     * @throws IllegalArgumentException if portfolio is null
+     */
     public void displayZakatDetails(Portfolio portfolio) {
         System.out.println("\n=== Zakat Calculation Details ===");
         System.out.println("Portfolio: " + portfolio);

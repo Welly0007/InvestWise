@@ -5,16 +5,32 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+/**
+ * Generates a detailed report of an investor's portfolios, including asset information
+ * and zakat applicability. The report is saved to a file with a timestamp in the filename.
+ */
 public class PortfolioReport extends ReportGenerator {
     private List<Portfolio> portfolios;
     private Investor investor;
 
+    /**
+     * Constructs a PortfolioReport for the specified investor and portfolios.
+     *
+     * @param portfolios the list of portfolios to include in the report
+     * @param investor the investor whose portfolios are being reported
+     */
     public PortfolioReport(List<Portfolio> portfolios, Investor investor) {
         super();
         this.portfolios = portfolios;
         this.investor = investor;
     }
 
+    /**
+     * Generates a comprehensive portfolio report and saves it to a file.
+     * The report includes details for each portfolio, its assets, values,
+     * and zakat applicability. The filename is generated automatically with
+     * a timestamp.
+     */
     @Override
     public void generateReport() {
         String fileName = generateFileName("portfolio_summary");

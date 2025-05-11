@@ -4,16 +4,34 @@ import java.io.IOException;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
+/**
+ * A report generator that creates detailed Zakat calculation reports for investment portfolios.
+ * The report includes asset values, Zakat eligibility, and individual/aggregate Zakat amounts.
+ */
 public class ZakatReport extends ReportGenerator {
     private Portfolio portfolio;
     private ZakatEstimator zakatEstimator;
 
+    /**
+     * Constructs a ZakatReport for the specified portfolio.
+     * Initializes the Zakat estimator utility.
+     *
+     * @param portfolio the portfolio to generate the Zakat report for
+     */
     public ZakatReport(Portfolio portfolio) {
         super();
         this.portfolio = portfolio;
         this.zakatEstimator = new ZakatEstimator();
     }
 
+    /**
+     * Generates a comprehensive Zakat report and saves it to a file.
+     * The report includes:
+     * - Header with generation timestamp and portfolio information
+     * - Detailed table of assets showing values and Zakat calculations
+     * - Summary of total Zakat payable
+     * The file is saved with a timestamped filename in the reports directory.
+     */
     @Override
     public void generateReport() {
         String fileName = generateFileName("zakat_report");
