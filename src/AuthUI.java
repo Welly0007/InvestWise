@@ -6,7 +6,6 @@ import java.util.Scanner;
  */
 public class AuthUI {
     private final AuthService authService;
-    private final PortfolioDatabase portfolioDatabase;
     private final Scanner scanner;
     private boolean isRunning;
     private Investor currentUser;  // Changed to Investor 
@@ -17,9 +16,8 @@ public class AuthUI {
      * @param authService the authentication service to handle login/registration
      * @param portfolioDatabase the database service for portfolio operations
      */
-    public AuthUI(AuthService authService, PortfolioDatabase portfolioDatabase) {
+    public AuthUI(AuthService authService) {
         this.authService = authService;
-        this.portfolioDatabase = portfolioDatabase;
         this.scanner = new Scanner(System.in);
         this.isRunning = true;
         this.currentUser = null;

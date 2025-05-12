@@ -32,7 +32,9 @@ public abstract class Database<T> implements Serializable {
             saveToFile(new ArrayList<>()); // Create an empty database file
         }
         try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(fileName))) {
-            return (List<T>) in.readObject();
+            @SuppressWarnings("unchecked")
+            List<T> data = (List<T>) in.readObject();
+            return data;
         } catch (Exception e) {
             System.out.println("Error: " + e.getMessage());
             return new ArrayList<>();

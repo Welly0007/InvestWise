@@ -48,7 +48,6 @@ public class UserDatabase extends Database<User> {
             saveToFile(users);
             return true;
         } else {
-            System.out.println("User not found in the database.");
             return false;
         }
     }
@@ -76,7 +75,6 @@ public class UserDatabase extends Database<User> {
                 return user;
             }
         }
-        System.out.println("User not found.");
         return null;
     }
     /**
