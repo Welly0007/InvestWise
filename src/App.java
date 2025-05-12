@@ -1,21 +1,19 @@
 /**
- * Main application class that serves as the entry point for the Portfolio Management System.
- * Initializes the system with a default investor and starts the portfolio management interface.
+ * The main application class that serves as the entry point for the program.
+ * This class initializes the necessary services and starts the authentication user interface.
  */
 public class App {
     /**
-     * Main method that launches the portfolio management application.
-     * Creates a default investor and initializes the PortfolioManager.
-     * 
-     * @param args Command line arguments (not currently used)
+     * The main method that starts the application.
+     * It creates instances of AuthService, PortfolioDatabase, and AuthUI,
+     * then starts the authentication user interface.
+     *
+     * @param args command-line arguments (not used in this application)
      */
     public static void main(String[] args) {
-        // Initialize portfolio manager with a default investor
-        PortfolioManager portManager = new PortfolioManager(
-            new Investor("John Doe", "john.doe@example.com", "johndoe", "password123")
-        );
-        
-        // Start the portfolio management interface
-        portManager.start();
+        AuthService authService = new AuthService();
+        PortfolioDatabase portfolioDatabase = new PortfolioDatabase();
+        AuthUI authUI = new AuthUI(authService, portfolioDatabase);
+        authUI.start();
     }
 }

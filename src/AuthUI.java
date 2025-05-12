@@ -1,38 +1,44 @@
 import java.util.Scanner;
-
 /**
- * A console-based user interface for the authentication system.
- * This class provides text-based interaction for user authentication
- * including login and registration functionality.
+ * The user interface class for handling authentication and user sessions.
+ * Manages the login, registration, and session flow for investors in the Investment Portfolio System.
+ * Once authenticated, launches the PortfolioManager for the logged-in investor.
  */
 public class AuthUI {
     private final AuthService authService;
+    private final PortfolioDatabase portfolioDatabase;
     private final Scanner scanner;
     private boolean isRunning;
-    private User currentUser;
+    private Investor currentUser;  // Changed to Investor 
 
     /**
-     * Constructs an AuthUI with the specified AuthService.
-     * @param authService the authentication service to use
+     * Constructs an AuthUI instance with required services.
+     * 
+     * @param authService the authentication service to handle login/registration
+     * @param portfolioDatabase the database service for portfolio operations
      */
-    public AuthUI(AuthService authService) {
+    public AuthUI(AuthService authService, PortfolioDatabase portfolioDatabase) {
         this.authService = authService;
+        this.portfolioDatabase = portfolioDatabase;
         this.scanner = new Scanner(System.in);
         this.isRunning = true;
         this.currentUser = null;
     }
 
     /**
-     * Starts the authentication user interface.
+     * Starts the authentication user interface loop.
+     * Displays the main menu and manages the application lifecycle.
      */
     public void start() {
-        System.out.println("=== Welcome to Authentication System ===");
+        System.out.println("=== Welcome to Investment Portfolio System ===");
         
         while (isRunning) {
             if (currentUser == null) {
                 showMainMenu();
             } else {
-                showUserMenu();
+                // Directly launch portfolio management after login
+                launchPortfolioManager();
+                handleLogout();  // Logout after returning from portfolio manager
             }
         }
         
@@ -40,10 +46,10 @@ public class AuthUI {
     }
 
     /**
-     * Displays the main menu for unauthenticated users.
+     * Displays the main menu options for unauthenticated users.
      */
     private void showMainMenu() {
-        System.out.println("Authentication menu:");
+        System.out.println("\nMain Menu:");
         System.out.println("1. Login");
         System.out.println("2. Register");
         System.out.println("3. Exit");
@@ -66,28 +72,7 @@ public class AuthUI {
     }
 
     /**
-     * Displays the menu for authenticated users.
-     */
-    private void showUserMenu() {
-        System.out.println("\nWelcome, " + currentUser.name + "!");
-        System.out.println("1. View Profile");
-        System.out.println("2. Logout");
-        System.out.print("Select an option: ");
-        
-        int choice = getIntInput(1, 2);
-        
-        switch (choice) {
-            case 1:
-                displayUserProfile();
-                break;
-            case 2:
-                handleLogout();
-                break;
-        }
-    }
-
-    /**
-     * Handles the user login process.
+     * Handles the user login process by collecting credentials and authenticating.
      */
     private void handleLogin() {
         System.out.println("\n=== Login ===");
@@ -100,15 +85,15 @@ public class AuthUI {
         AuthService.LoginResult result = authService.login(username, password);
         
         if (result.isSuccess()) {
-            currentUser = result.getUser();
-            System.out.println("Login successful!");
+            currentUser = (Investor) result.getUser();  // Cast to Investor
+            System.out.println("\nLogin successful! Loading your portfolios...");
         } else {
             System.out.println("Login failed. Invalid credentials.");
         }
     }
 
     /**
-     * Handles the user registration process.
+     * Handles new user registration by collecting user details and validating them.
      */
     private void handleRegistration() {
         System.out.println("\n=== Registration ===");
@@ -139,19 +124,15 @@ public class AuthUI {
     }
 
     /**
-     * Displays the current user's profile information.
+     * Launches the portfolio management interface for the authenticated investor.
      */
-    private void displayUserProfile() {
-        System.out.println("\n=== Your Profile ===");
-        System.out.println("Name: " + currentUser.name);
-        System.out.println("Email: " + currentUser.email);
-        System.out.println("Username: " + currentUser.userName);
-        System.out.println("\nPress Enter to continue...");
-        scanner.nextLine();
+    private void launchPortfolioManager() {
+        PortfolioManager portfolioManager = new PortfolioManager(currentUser);
+        portfolioManager.start();
     }
 
     /**
-     * Handles user logout.
+     * Handles user logout by clearing the current session.
      */
     private void handleLogout() {
         currentUser = null;
@@ -159,9 +140,10 @@ public class AuthUI {
     }
 
     /**
-     * Gets validated integer input from the user.
-     * @param min minimum valid value
-     * @param max maximum valid value
+     * Helper method to get validated integer input within a specified range.
+     * 
+     * @param min the minimum acceptable value
+     * @param max the maximum acceptable value
      * @return the validated user input
      */
     private int getIntInput(int min, int max) {
@@ -176,15 +158,5 @@ public class AuthUI {
                 System.out.print("Invalid input. Please enter a number: ");
             }
         }
-    }
-
-    /**
-     * The main entry point for the authentication UI.
-     * @param args command line arguments (not used)
-     */
-    public static void main(String[] args) {
-        AuthService authService = new AuthService();
-        AuthUI authUI = new AuthUI(authService);
-        authUI.start();
     }
 }

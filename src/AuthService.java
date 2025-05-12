@@ -25,30 +25,47 @@ public class AuthService implements Serializable {
      * @param confirmPassword password confirmation (must match password)
      * @return a SignupResult indicating the outcome of the registration attempt
      */ 
+    /**
+     * Registers a new investor user with the provided details.
+     * Validates the password match, creates a new Investor object, checks validity,
+     * and attempts to add the user to the database.
+     *
+     * @param name the full name of the user
+     * @param email the email address of the user
+     * @param username the desired username
+     * @param password the user's password
+     * @param confirmPassword password confirmation (must match password)
+     * @return SignupResult indicating the outcome of the registration attempt:
+     *         - PASSWORD_MISMATCH if passwords don't match
+     *         - FAILED if user data is invalid
+     *         - SUCCESS if registration was successful
+     *         - DUPLICATE_USERNAME if username already exists
+     *         - Other error states based on validation exceptions
+     */
     public SignupResult signUp(String name, String email, String username, 
-                          String password, String confirmPassword) {
-    
-    if (!password.equals(confirmPassword)) {
-        return SignupResult.PASSWORD_MISMATCH;
-    }
+                            String password, String confirmPassword) {
+        
+            if (!password.equals(confirmPassword)) {
+                return SignupResult.PASSWORD_MISMATCH;
+            }
 
-    try {
-        Investor newUser = new Investor(name, email, username, password);
-        
-       
-        if (!isValidUser(newUser)) {
-            return SignupResult.FAILED; 
+            try {
+                // Changed to create Investor instead of generic User
+                Investor newUser = new Investor(name, email, username, password);
+                
+                if (!isValidUser(newUser)) {
+                    return SignupResult.FAILED; 
+                }
+                
+                if (userDB.addData(newUser)) {
+                    return SignupResult.SUCCESS;
+                } else {
+                    return SignupResult.DUPLICATE_USERNAME;
+                }
+            } catch (IllegalArgumentException e) {
+                return SignupResult.fromException(e);
+            }
         }
-        
-        if (userDB.addData(newUser)) {
-            return SignupResult.SUCCESS;
-        } else {
-            return SignupResult.DUPLICATE_USERNAME;
-        }
-    } catch (IllegalArgumentException e) {
-        return SignupResult.fromException(e);
-    }
-}
     /**
      * Logs in a user with the provided credentials.
      * 
