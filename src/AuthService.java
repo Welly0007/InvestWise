@@ -124,9 +124,10 @@ public class AuthService implements Serializable {
             INVALID_EMAIL("Invalid email format"),
             INVALID_PASSWORD("Password must contain uppercase, number/special char"),
             PASSWORD_MISMATCH("Passwords do not match"),
-            FAILED("Registration failed");
+            FAILED("Registration failed"),
+            CUSTOM_ERROR(""); // Added for custom error messages
         
-            private final String message;
+            private String message;
         
             SignupResult(String message) {
                 this.message = message;
@@ -139,14 +140,22 @@ public class AuthService implements Serializable {
          * Converts an IllegalArgumentException to the appropriate SignupResult.
          * 
          * @param e the exception to convert
-         * @return the corresponding SignupResult
+         * @return the corresponding SignupResult with a custom error message
          */    
         public static SignupResult fromException(IllegalArgumentException e) {
-            String message = e.getMessage();
-            if (message.contains("name")) return INVALID_NAME;
-            if (message.contains("email")) return INVALID_EMAIL;
-            if (message.contains("password")) return INVALID_PASSWORD;
-            return FAILED;
+            return CUSTOM_ERROR.withMessage(e.getMessage());
+        }
+
+        /**
+         * Sets a custom message for the SignupResult.
+         * 
+         * @param customMessage The custom error message
+         * @return A new SignupResult with the custom message
+         */
+        public SignupResult withMessage(String customMessage) {
+            SignupResult result = CUSTOM_ERROR;
+            result.message = customMessage;
+            return result;
         }
     }
     /**
@@ -266,7 +275,7 @@ public class AuthService implements Serializable {
      */
     private boolean isValidPassword(String password) {
         if (password == null || password.length() < 8 || password.length() > 100) {
-            return false;
+            throw new IllegalArgumentException("Password must be between 8 and 100 characters.");
         }
         
         // Regex explanation:
@@ -276,7 +285,10 @@ public class AuthService implements Serializable {
         // .+          - one or more of any characters
         // $           - end of string
         String pattern = "^(?=.*[A-Z])(?=.*[\\d\\W]).+$";
-        return password.matches(pattern);
+        if (!password.matches(pattern)) {
+            throw new IllegalArgumentException("Password must contain at least one uppercase letter and one digit or special character.");
+        }
+        return true;
     }
     /**
      * Validates all user attributes according to system rules.

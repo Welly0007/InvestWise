@@ -12,8 +12,7 @@ public class App {
      */
     public static void main(String[] args) {
         AuthService authService = new AuthService();
-        PortfolioDatabase portfolioDatabase = new PortfolioDatabase();
-        AuthUI authUI = new AuthUI(authService, portfolioDatabase);
+        AuthUI authUI = new AuthUI(authService);
         authUI.start();
     }
 }

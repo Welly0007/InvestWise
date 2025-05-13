@@ -1,10 +1,9 @@
-import java.io.Serializable;
 /**
  * Represents an investor user in the Investment Portfolio System.
  * Extends the base User class with investor-specific functionality
  * and implements Serializable for object persistence.
  */
-public class Investor extends User implements Serializable {
+public class Investor extends User {
     private static final long serialVersionUID = 1L;
 
     /**
